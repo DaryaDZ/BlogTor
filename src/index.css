@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+:root{
+  --primary-dark:#ff5722;
+  --primary-light:#d9a629;
+
+}
+.icon{
+  color: var(--primary-dark);
+}
+@layer base{
+  body{
+      @apply font-['Poppins']
+  }
+  li{
+      @apply p-4 cursor-pointer  text-xl
+  }
+  /* button{
+      @apply p-3 border bg-gradient-to-r from-[var(--primary-dark)] to-[var(--primary-light)] text-white rounded font-bold
+  } */
+  .icon{
+      @apply text-2xl cursor-pointer 
+  }
+  .btn{
+  @apply bg-
+  }
+  
+}
