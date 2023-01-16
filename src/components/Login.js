@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Cookie from 'cookie-universal'
 import Ragisterback from "../Images/Ragisterback.jpg";
-
+import axios from 'axios';
+import { useQuery } from "react-query";
 
 const Login = () => {
   const [UserName,setUserName]=useState("");
@@ -32,6 +33,14 @@ const Login = () => {
     }
     console.log(data)
   })
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
   return (
