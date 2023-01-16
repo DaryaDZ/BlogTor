@@ -12,9 +12,6 @@ function NewBlog() {
         .then((res) => res.json())
         .then((data) =>{console.log(data) ;setAllBlog(data)})
         .finally(() => setisLoading(false));
-  
-
-  
     }, []);
   
     if (isLoading) return <h1>is Loading...</h1>;

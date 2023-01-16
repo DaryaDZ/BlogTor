@@ -3,32 +3,58 @@ import Ragisterback from "../Images/Ragisterback.jpg";
 import { BsFillFilePersonFill } from "react-icons/bs";
 import {RiUserSmileLine } from "react-icons/ri";
 import Cookie from 'cookie-universal'
+import axios from "axios";
+import { useQueryClient,useMutation } from "react-query";
+
 
 
 const Register = () => {
 const [userName ,setUserName]=useState("")
 const [name ,setName] = useState("");
-const cookies = Cookie()
+  const cookies = Cookie()
 
-const RegisterUser = async ()=> {
-  fetch('http://localhost:4000/user/signup' ,{
-  method:"POST",
-  headers:{'content-Type':'application/json',
-  },
-  body:JSON.stringify({username:userName ,name:name})
-  }).then(res=>res.json()).then(data=>{
-    if(data.token !== undefined)
-    {
-      cookies.set('token',data.token,{path:'/'})
+  
+  // const queryclient = useQueryClient();
+// const RegisterUser = async ()=> {
+//   fetch('http://localhost:4000/user/signup' ,{
+//   method:"POST",
+//   headers:{'content-Type':'application/json',
+//   },
+//   body:JSON.stringify({username:userName ,name:name})
+//   }).then(res=>res.json()).then(data=>{
+//     if(data.token !== undefined)
+//     {
+//       cookies.set('token',data.token,{path:'/'})
+//       window.location.assign("http://localhost:3000/login")
+//     }
+//     if(data.msg)
+//     {
+//       alert(data.msg)
+//     }
+//     console.log(data)
+//   })
+// }
+
+  
+  const RegisterUserInReactQuery = async () => {
+    const {data} = await axios.post("http://localhost:4000/user/signup", {
+     userName,
+      name
+    }).catch(error => {
+  // alert(`${error.message}`)
+      console.log(error.message)
+    })
+    if (data.token !== undefined) {
+      cookies.set('token',data.token)
       window.location.assign("http://localhost:3000/login")
+      return data
     }
-    if(data.msg)
-    {
-      alert(data.msg)
-    }
-    console.log(data)
-  })
-}
+  }
+  
+  const RegisterUser=useMutation(RegisterUserInReactQuery)
+  
+
+  
   return (
     <>
       <div className="w-full h-screen relative flex items-center justify-center">
@@ -66,7 +92,7 @@ const RegisterUser = async ()=> {
           to-[var(--primary-light)]
            text-white rounded font-bold"
            
-           onClick={RegisterUser}>
+           onClick={RegisterUser.mutate()}>
             Sing Up
           </button>
         </div>

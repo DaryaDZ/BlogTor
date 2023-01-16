@@ -8,6 +8,10 @@ import Cookie from "cookie-universal";
 import {BsStarFill} from 'react-icons/bs'
 import { Rating } from 'react-simple-star-rating'
 import BlogOfSpecialUser from "./BlogOfSpecialUser";
+import { useQuery } from "react-query";
+import axios from "axios";
+
+
 
 function BlogbyId() {
   const [rating, setRating] = useState(0)
@@ -37,39 +41,34 @@ function BlogbyId() {
       }
     })
   }
+//   useEffect(() => {
 
+//     const abc = async () => {
 
+//       // promise - async await vs .then  - promise.all
+// // hamzaman 2 fetch ejra mishavad
+//       const [res1, res2] = await Promise.all([
+//         fetch(`http://localhost:4000/blog/single-blog/${id}`, {
+//           method: "GET",
+//           headers: { "Content-Type": "application/json" },
+//         }),
+//         fetch(`http://localhost:4000/comment/by-blog/${id}`, {
+//           method: "GET",
+//           headers: { "Content-Type": "application/json" },
+//         })
+//       ]);
 
-  
+//       const [blogs, comments] = await Promise.all([
+//         res1.json(),
+//         res2.json()
+//       ]);
 
-  useEffect(() => {
+//       setBlog(blogs);
+//       setAllComments(comments);
+//       setisLoading(false)
+//     }
 
-    const abc = async () => {
-
-      // promise - async await vs .then  - promise.all
-// hamzaman 2 fetch ejra mishavad
-      const [res1, res2] = await Promise.all([
-        fetch(`http://localhost:4000/blog/single-blog/${id}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }),
-        fetch(`http://localhost:4000/comment/by-blog/${id}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        })
-      ]);
-
-      const [blogs, comments] = await Promise.all([
-        res1.json(),
-        res2.json()
-      ]);
-
-      setBlog(blogs);
-      setAllComments(comments);
-      setisLoading(false)
-    }
-
-    abc()
+//     abc()
     // fetch(`http://localhost:4000/blog/single-blog/${id}`, {
     //   method: "GET",
     //   headers: { "Content-Type": "application/json" },
@@ -90,9 +89,19 @@ function BlogbyId() {
     //   })
 
     //   .finally(() => setisLoading(false));
-  }, []);
+  // }, []);
 
-  if (isLoading) return <h1>is Loading...</h1>;
+  // if (isLoading) return <h1>is Loading...</h1>;
+
+  const fetchsingleBlog = async () => {
+    const res1 = await axios.get(`http://localhost:4000/blog/single-blog/${id}`)
+    const res2 = await axios.get(`http://localhost:4000/comment/by-blog/${id}`)
+    return { res1, res2 }
+}
+  const {data} = useQuery('singleBlog', fetchsingleBlog)
+
+console.log(data.res2.data)
+
 
   const SubmitComment = () => {
     fetch("http://localhost:4000/user/me", {
@@ -157,35 +166,36 @@ function BlogbyId() {
 
 //   const sth = `http://localhost:4000/${allComments.user.avatar}`;
   return (
+    
     <div className="w-full p-20 bg-gray-900 ">
       <div className="w-[100%] p-10 bg-white flex flex-col  ">
         <div className=" flex w-full">
-          <img src={blog.imgurl} alt="" className="w-full" />
+          <img src={data.res1.data.imgurl} alt="" className="w-full" />
         </div>
         <div className="mt-5 w-full flex justify-between">
           <div>
-            <h1 className="font-bold text-3xl text-left">{blog.title}</h1>
-            <h3 className="text-sm text-left">{blog.createdAt}</h3>
+            <h1 className="font-bold text-3xl text-left">{data.res1.data.title}</h1>
+            <h3 className="text-sm text-left">{data.res1.data.createdAt}</h3>
             <h3 className="text-sm text-left flex justify-start items-center">
-              <BsStarFill  className="text-lg mr-2"/>{blog.averageScore.toFixed(1)}</h3>
+              <BsStarFill  className="text-lg mr-2"/>{data.res1.data.averageScore.toFixed(1)}</h3>
             
           </div>
 
           <div className="w-[30%] flex justify-end items-center ">
-            <Link className="hover:font-bold" to={`/blogs/blogsofspeceficuser/${blog.creator._id}`} >
-              <h4 className="mr-2">{blog.creator.name}</h4>
+            <Link className="hover:font-bold" to={`/blogs/blogsofspeceficuser/${data.res1.data.creator._id}`} >
+              <h4 className="mr-2">{data.res1.data.creator.name}</h4>
             </Link>
             <img
-              src={blog.creator.avatar?`http://localhost:4000/${blog.creator.avatar}`:unknownUser}
+              src={data.res1.data.creator.avatar?`http://localhost:4000/${data.res1.data.creator.avatar}`:unknownUser}
               alt=""
               className="w-12 h-12 rounded-full object-cover"
             />
           </div>
         </div>
-        <div className="mt-10">{parse(blog.content)}</div>
+        <div className="mt-10">{parse(data.res1.data.content)}</div>
         <h3 className="font-bold mt-5 text-xl">Comments</h3>
         <div className="w-full border-4 rounded-xl p-5">
-          {allComments.map((item) => {
+          {data.res2.data.map((item) => {
             return (
               <div className=" border-2 p-2 mt-3 rounded-xl">
                 <div className="flex items-center">

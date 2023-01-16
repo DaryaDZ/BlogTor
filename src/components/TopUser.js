@@ -3,24 +3,38 @@ import unknownUser from "../Images/unknownUser.png";
 import { BsStarFill } from "react-icons/bs";
 import { BiSkipNextCircle, BiSkipPreviousCircle } from "react-icons/bi";
 import SimpleImageSlider from "react-simple-image-slider";
-
-
+import { useQuery } from "react-query";
+import axios from "axios";
 
 
 function TopUser() {
-  const [TopUser, setTopUser] = useState([]);
+  // const [TopUser, setTopUser] = useState([]);
 
-  const [isLoading, setisLoading] = useState(true);
-  useEffect(() => {
-    fetch("http://localhost:4000/user/top-users")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setTopUser(data);
-      })
-      .finally(() => setisLoading(false));
-  }, []);
-  if (isLoading) return <h1>is Loading...</h1>;
+  // const [isLoading, setisLoading] = useState(true);
+  // useEffect(() => {
+  //   fetch("http://localhost:4000/user/top-users")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       setTopUser(data);
+  //     })
+  //     .finally(() => setisLoading(false));
+  // }, []);
+  // if (isLoading) return <h1>is Loading...</h1>;
+
+  const fetchTopusers = async() => {
+    return await axios.get("http://localhost:4000/user/top-users")
+  }
+
+const {data,isLoading,isError,error}=useQuery('topusers',fetchTopusers)
+  if (isLoading) {
+  return <h1>Loading....</h1>
+  }
+ if (isError) {
+    return <p>{error.message}</p>
+  }
+
+
 
 
   return (
@@ -35,10 +49,10 @@ function TopUser() {
           
           <div className="w-full ">
             <ul className="flex w-full  ">
-              {TopUser.map((item) => {
+              {data.data.map((item) => {
                 return (
                   <>
-                    <li className="flex items-center justify-center relative w-full ">
+                    <li className="flex items-center justify-center relative w-full " key={item._id}>
                       
                       <img
                         src={`http://localhost:4000/${item.avatar}`}

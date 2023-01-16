@@ -5,29 +5,37 @@ import { Link } from "react-router-dom";
 import {FaComments} from 'react-icons/fa';
 import {BsStarFill} from 'react-icons/bs'
 import BlogbyId from "./BlogbyId";
+import { useQuery } from "react-query";
+import axios from "axios";
+
+
 
 function Blogs() {
-  const [allBlog, setAllBlog] = useState([]);
-  const [isLoading, setisLoading] = useState(true);
+  // const [allBlog, setAllBlog] = useState([]);
+  // const [isLoading, setisLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("http://localhost:4000/blog")
-      .then((res) => res.json())
-      .then((data) =>{console.log(data) ;setAllBlog(data)})
-      .finally(() => setisLoading(false));
+  // useEffect(() => {
+  //   fetch("http://localhost:4000/blog")
+  //     .then((res) => res.json())
+  //     .then((data) =>{console.log(data) ;setAllBlog(data)})
+  //     .finally(() => setisLoading(false));
+  // }, []);
+  // if (isLoading) return <h1>is Loading...</h1>;
 
-    
 
+  const fetchBlogs =  () => {
+  return axios.get("http://localhost:4000/blog")
+}
 
-
-  }, []);
-
-  if (isLoading) return <h1>is Loading...</h1>;
-
+  const { data, isLoading } = useQuery('allblogs', fetchBlogs);
+  console.log(data.data)
+  if (isLoading) {
+  return <h1>Loading.....</h1>
+}
   return (
     <div className="w-full  p-20 bg-gray-900">
       <div className="ml-20 w-[88%] h-full flex flex-wrap">
-        {allBlog.map((item) => {
+        {data.data.map((item) => {
           return (
             <div className="m-5  w-[350px] h-[370px] border-2  rounded-md bg-[rgb(255, 244, 244)] bg-white">
               <ul>

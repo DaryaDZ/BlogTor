@@ -13,26 +13,26 @@ const Login = () => {
   const [password ,setPassword] =useState('')
   const cookies = Cookie()
   
-  const Login = ()=>
+  const Login = async()=>
   {
-    fetch('http://localhost:4000/user/login',{
-      method:"POST",
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({username:UserName , password:password})
-  }).then(res=>res.json()).then(data=>{
-    if(data.token !== undefined)
-    {
-      cookies.set('token',data.token,{path:'/'})
-      window.location.assign("/")
-    }
-    if(data.msg)
-    {
-      alert(data.msg)
-    }
-    console.log(data)
-  })
+  //   fetch('http://localhost:4000/user/login',{
+  //     method:"POST",
+  //     headers:{
+  //       'Content-Type':'application/json'
+  //     },
+  //     body:JSON.stringify({username:UserName , password:password})
+  // }).then(res=>res.json()).then(data=>{
+  //   if(data.token !== undefined)
+  //   {
+  //     cookies.set('token',data.token,{path:'/'})
+  //     window.location.assign("/")
+  //   }
+  //   if(data.msg)
+  //   {
+  //     alert(data.msg)
+  //   }
+  //   console.log(data)
+  // })
     
     
     
